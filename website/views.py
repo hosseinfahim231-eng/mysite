@@ -1,6 +1,12 @@
-from django.http import HttpResponse
+
+from django.shortcuts import render
 
 
-def http_test(request):
-    return HttpResponse("Hello World")
+def index(request):
+    return render(request, 'website/index.html')
 # Create your views here.
+def about(request):
+    return render(request, 'website/about.html')
+
+def contact(request):
+    return render(request, 'website/contact.html')
