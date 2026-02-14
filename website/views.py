@@ -10,7 +10,7 @@ def about(request):
 
 
 def contact(request):
-    return render(request, 'website/contact.html')
+    return render(request, 'website/Contact.html')
 
 def blog_home(request):
     return render(request, 'website/blog-home.html')
