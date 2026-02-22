@@ -2,12 +2,14 @@ from django.shortcuts import render,get_object_or_404
 from blog.models import Post
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 
-def blog_view(request,cat_name=None,author_username=None):
+def blog_view(request,cat_name=None,author_username=None,**kwargs):
      posts = Post.objects.filter(status=1)
      if cat_name:
          posts = posts.filter(category__name=cat_name)
      if author_username:
          posts = posts.filter(author__username=author_username)
+     if kwargs.get('tag_name')  != None:
+         posts = posts.filter(tags__name__in=[kwargs['tag_name']])
 
      posts = Paginator(posts, 3)
      try:

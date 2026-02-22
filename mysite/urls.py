@@ -20,11 +20,15 @@ from django.urls import path, include
 
 from mysite import settings
 from django.conf.urls.static import static
+import debug_toolbar
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('website.urls')),
-    path('blog/', include('blog.urls'))
+    path('blog/', include('blog.urls')),
+    path('__debug__/', include(debug_toolbar.urls)),
+    path('summernote/', include('django_summernote.urls')),
+    path('captcha/', include('captcha.urls')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
