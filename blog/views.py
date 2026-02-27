@@ -1,6 +1,11 @@
 from django.shortcuts import render,get_object_or_404
-from blog.models import Post
+from blog.models import Post,Comment
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
+from blog.forms import CommentForm
+from django.contrib import messages
+from django.urls import reverse
+from django.http import HttpResponse, HttpResponseRedirect
+
 
 def blog_view(request,cat_name=None,author_username=None,**kwargs):
      posts = Post.objects.filter(status=1)
@@ -24,9 +29,21 @@ def blog_view(request,cat_name=None,author_username=None,**kwargs):
 
 
 def blog_single(request,pid):
+    if  request.method == "POST":
+         form = CommentForm(request.POST)
+         if form.is_valid():
+             form.save()
+             messages.add_message(request, messages.SUCCESS, 'Your COMMENT submited successfully')
+         else:
+             messages.add_message(request, messages.ERROR, 'Your COMMENT didnt submited ')
     post = get_object_or_404(Post, pk=pid,status=1)
-    context = {'post': post}
-    return render(request,'blog/blog-single.html',context)
+    if not post.login_require:
+         comments = Comment.objects.filter(post=post.id, approved=True)
+         form = CommentForm
+         context = {'post': post, 'comments': comments, 'form': form}
+         return render(request,'blog/blog-single.html',context)
+    else:
+     return HttpResponseRedirect(reverse('accounts:login'))
 
 def test(request):
     return render(request,'test.html')
